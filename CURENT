@@ -1,0 +1,52 @@
+import wpilib
+import wpilib.drive
+
+class myrobot(wpilib.TimedRobot):
+
+    def robotInit(self):
+        #defines all
+        self.motorFR= wpilib.PWMTalonSRX(0)
+        self.motorFL= wpilib.PWMTalonSRX(1)
+        self.motorBR= wpilib.PWMTalonSRX(2)
+        self.motorBL= wpilib.PWMTalonSRX(3)
+        self.leftDrive=wpilib.SpeedControllerGroup(self.motorBR,self.motorFR)
+        self.rightDrive=wpilib.SpeedControllerGroup(self.motorBL,self.motorFL)
+        self.drive= wpilib.drive.DifferntalDrive(self.leftDrive,self.rightDrive)
+        #for PTP -coords start at 0,0 -change to network tables
+        robx=0
+        roby=0
+        robRot=0
+        self.location =(robx,roby,robRot)
+        
+        self.xboxcontA= wpilib.XboxController()
+    
+        #add CAN ID & solbase
+
+        self.fireSol = wpilib.Solenoid(0)
+        self.fillSol = wpilib.Solenoid(1)
+        senitiveMult = 2
+
+        return super().robotInit()
+    def autonomousInit(self):
+        return super().autonomousInit()
+    def autonomousPeriodic(self):
+        return super().autonomousPeriodic()
+    def teleopPeriodic(self):
+        
+        buttonA=self.xboxcont.getAButtonPressed()
+        if (buttonA==True):
+            self.fireSol.setPulseDuration(1)
+            self.fireSol.startpulse()
+
+        buttonB=self.xboxcont.getBButtonPressed()
+        if (buttonB==True):
+            self.fireSol.setPulseDuration(1)
+            self.fireSol.startpulse()
+
+
+        drive.arcadedrive()
+        return super().teleopPeriodic()
+    
+if __name__=="__main__":
+    wpilib.run(myrobot)
+    
